@@ -12,3 +12,8 @@
 - email Notification
 - OTP verification
 - chart and analytics
+
+
+### DAO(Data access Object)
+
+- it's job is to talk Databases only(no Business Logic ,no UI)

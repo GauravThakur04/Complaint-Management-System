@@ -67,4 +67,62 @@ public class ComplaintDAO {
 
         return list;
     }
+
+//ADMIN PART: VIEW ALLL COMPLAINTS
+
+public List<Complaint> getAllComplaints(){
+
+    List<Complaint> list = new ArrayList<>();
+
+    String sql = "SELECT * FROM complaints";
+
+    try{
+        Connection con = DBConnection.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+
+        while(rs.next()){
+            Complaint c = new Complaint();
+
+            c.setId(rs.getInt("id"));
+            c.setUserId(rs.getInt("user_id"));
+            c.setTitle(rs.getString("title"));
+            c.setDescription(rs.getString("description"));
+            c.setStatus(rs.getString("status"));
+            c.setCreatedAt(rs.getTimestamp("created_at"));
+
+
+            list.add(c);
+        }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+
+        
+    }
+    return list;
+
 }
+
+//ADMIN : UPDATE COMPLAINT STATUS
+
+public boolean updateComplaintStatus(int Complaint_id ,String status){
+
+    String sql ="UPDATE complaints SET status = ? WHERE id =?";
+
+    try {
+        Connection con =  DBConnection.getConnection();
+        PreparedStatement ps =con.prepareStatement(sql);
+
+        ps.setString(1,status);
+        ps.setInt(2,Complaint_id);
+
+        return ps.executeUpdate()>0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+}// Bracket of class bcz it should parse upto here (at the end of the file)
