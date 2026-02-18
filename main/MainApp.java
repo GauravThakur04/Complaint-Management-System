@@ -39,7 +39,7 @@ public class MainApp {
             }
         }
     }
-    //---------------- REGISTRATION CODE -------------------
+    //---------------- USER REGISTRATION -------------------
      static void register(){
         System.out.println("\n--USER REGISTRATION--");
 
@@ -70,13 +70,13 @@ public class MainApp {
     static void login(){
         System.out.println("\n--LOGIN-- ");
 
-        System.out.println("Name: ");
-        String name = sc.nextLine();
+        System.out.println("email: ");
+        String email = sc.nextLine();
 
         System.out.println("password: ");
         String password = sc.nextLine();
 
-        User user = userDao.login(name,password);
+        User user = userDao.login(email,password);
         
         if(user == null){
             System.out.println("INVALID CREDENTIALS");
@@ -84,7 +84,7 @@ public class MainApp {
         }
         System.out.println("WELCOME" + user.getname());
         
-        if (user.getrole().equalsIgnoreCase("admin")) {
+        if (user.getrole() != null && user.getrole().equalsIgnoreCase("admin")) {
         adminMenu();
     } else {
         userMenu(user);
@@ -92,6 +92,8 @@ public class MainApp {
 }
 // ------USER MENU (ADD, VIEW,LOG OUT) -------
 static void userMenu(User user){
+
+    while(true){
     System.out.println("---USER MENU--");
     System.out.println("1.Add Complaint");
     System.out.println("2.View Complaint");
@@ -113,13 +115,11 @@ static void userMenu(User user){
     
     default -> System.out.println("invalid choice");
     }
-
 }
-static void adminMenu(){
-    System.out.println("Admin menu coming next...");
 }
-//------------AddComplaint--------
 
+
+//------------AddComplaint---------------
 public static void addComplaint(User user){
     System.out.println("--ADD COMPLAINT--");
 
@@ -142,7 +142,8 @@ public static void addComplaint(User user){
         System.out.println("Failed to add Complaint");
     }
 }
-//------------VIEW COMPLAINTS---------
+
+//------------VIEW COMPLAINTS--------------------------------------------
 static void viewMyComplaints(User user){
     System.out.println("\n--- MY COMPLAINTS ---");
 
@@ -161,7 +162,7 @@ static void viewMyComplaints(User user){
     }
 }
 
-//------UPDATE COMPLAINT STATUS ---------
+//------UPDATE COMPLAINT STATUS -------------------------------------------
 static void updateComplaintStatus(){
     System.out.println("----UPDATE COMPLAINT STATUS------");
 
@@ -182,6 +183,53 @@ static void updateComplaintStatus(){
     }
 
 }
+
+//-------------- Admin Menu-----------------------------
+static void adminMenu(){
+    while (true) { 
+       System.out.println("---Admin Menu--");
+
+       System.out.println("1. View all complaints");
+       System.out.println("2. Update compalint status");
+       System.out.println("3. Logout");
+       System.out.println("Choose option");
+        
+       int choice = sc.nextInt();
+       sc.nextLine();
+
+       switch(choice){
+        case 1 -> viewAllComplaints();
+
+        case 2 -> updateComplaintStatus();
+
+        case 3 -> {
+            System.out.println("Admin logged out");
+            return;
+        }default -> System.out.println("invalid choice");
+       }
+
+    }
+}
+
+ // ---------------- ADMIN: VIEW ALL COMPLAINTS ----------------
+    static void viewAllComplaints() {
+
+        List<Complaint> list = complaintDAO.getAllComplaints();
+
+        if (list.isEmpty()) {
+            System.out.println("No complaints found");
+            return;
+        }
+
+        for (Complaint c : list) {
+            System.out.println(
+                    "ID: " + c.getId() +
+                    " | User ID: " + c.getUserId() +
+                    " | Title: " + c.getTitle() +
+                    " | Status: " + c.getStatus()
+            );
+        }
+    }
 }
 
 
