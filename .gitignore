@@ -1,3 +1,9 @@
+*.class
+*.log
+.idea/
+.vscode/
+lib/*.jar
+
 # Java compiled files
 *.class
 
